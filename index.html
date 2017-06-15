@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	canvas{
+		border:1px solid;
+	}
+	</style>
+	<script src="underscore-min.js"></script>
+</head>
+<body>
+	
+	<canvas id="canvas" width="800" height="500"></canvas>
+	<script>
+	var arr = new Array();
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext('2d');
+	
+	function Ball(x,y,r,rChange,color,speedX,speedY){
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.rChange=rChange;
+		this.color = color;
+		this.speedX=speedX;
+		this.speedY=speedY;
+		arr.push(this);
+	}
+	
+	Ball.prototype = {
+		render:function(){
+			ctx.beginPath();
+			ctx.arc(this.x,this.y,this.r,0,Math.PI*2,true);
+			ctx.closePath();
+			ctx.fillStyle = this.color;
+			ctx.fill();
+		},
+		update:function(){
+			this.x+=this.speedX;
+			this.y+=this.speedY;
+			this.r -= this.rChange;
+			if(this.r<=0)
+			{
+				arr = _.without(arr,this);
+			}
+	    }
+	};
+	// new Ball(200,200,50,Math.random()+1,"rgba("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+Math.random()+")",Math.random()*10-5,Math.random()*10-5);
+	// new Ball(200,200,50,Math.random()+1,"rgba("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+Math.random()+")",Math.random()*10-5,Math.random()*10-5);
+		setInterval(function(){
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		for(var i = 0 ; i < arr.length ; i++)
+		{
+			arr[i].update();
+			if(arr[i])
+			{
+				arr[i].render();
+			}
+			
+		}
+	},20);
+	canvas.addEventListener("mousemove",function(event){
+			var env = event || window.event;
+		// console.log(env.clientX);
+		new Ball(env.clientX,env.clientY,30,Math.random()+1,"rgba("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+Math.random()+")",Math.random()*10-5,Math.random()*10-5);
+	});	
+	// canvas.onmousemove = function(event){
+	// 	var env = event || window.event;
+	// 	// console.log(env.clientX);
+	// 	new Ball(env.clientX,env.clientY,30,Math.random()+1,"rgba("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+Math.random()+")",Math.random()*10-5,Math.random()*10-5);
+	// }
+	
+	</script>
+</body>
+</html>
